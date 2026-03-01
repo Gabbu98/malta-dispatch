@@ -50,6 +50,21 @@ func (r *Registry) UpdateLocation(driverId string, newHex engine.Hex) {
 }
 
 func (r *Registry) FindNearby(center engine.Hex, radius int) []string {
-	
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	var found []string
+
+	searchArea := engine.GetRange(center, radius)
+
+	// get all hexes in range
+	for _, hex := range searchArea {
+		if driversInHex, ok := r.Cells[hex]; ok {
+			for id := range driversInHex {
+				found = append(found, id)
+			}
+		}
+	}
+	return found
 }
 
