@@ -68,3 +68,12 @@ func (r *Registry) FindNearby(center engine.Hex, radius int) []string {
 	return found
 }
 
+//func (r *Registry) HandleClientLocation(lat, lon float64) []string {}
+
+
+func (r *Registry) HandleDriverUpdate(driverId string, lat, lon float64) {
+	currentHex := engine.LatLngToHex(lat, lon, 300.0)
+
+	r.UpdateLocation(driverId, currentHex)
+}
+
