@@ -1,6 +1,7 @@
 package store
 
 import (
+	"fmt"
 	"malta-dispatch/internal/engine"
 	"sync"
 )
@@ -23,7 +24,14 @@ func NewRegistry() *Registry {
 }
 
 // Moves a driver from their current hex to a nex hex
-func (r *Registry) UpdateLocation(driverId string, newHex engine.Hex) {
+func (r *Registry) updateLocation(driverId string, lat, lon float64, mask *engine.LandMask) {
+	newHex := engine.LatLngToHex(lat, lon, 300.0)
+
+	if !mask.IsLand(newHex) {
+		fmt.Printf("Warning: Driver %s reported location at sea. Ignoring.\n")
+		return
+	}
+
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -71,9 +79,7 @@ func (r *Registry) FindNearby(center engine.Hex, radius int) []string {
 //func (r *Registry) HandleClientLocation(lat, lon float64) []string {}
 
 
-func (r *Registry) HandleDriverUpdate(driverId string, lat, lon float64) {
-	currentHex := engine.LatLngToHex(lat, lon, 300.0)
-
-	r.UpdateLocation(driverId, currentHex)
+func (r *Registry) HandleDriverUpdate(driverId string, lat, lon float64, mask *engine.LandMask) {
+	r.updateLocation(driverId, lat, lon, mask)
 }
 
