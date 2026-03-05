@@ -44,8 +44,8 @@
 	return Hex{h.Q + dir.Q, h.R + dir.R}
  }
 
- func Distance(a, b Hex) int {
-	return (abs(a.Q-b.Q) + abs(a.Q+a.R) + abs(a.R-b.R)) / 2
+ func (h Hex) Distance(neighbour Hex) int {
+ 	return (abs(h.Q-neighbour.Q) + abs(h.Q+h.R-(neighbour.Q+neighbour.R)) + abs(h.R-neighbour.R)) / 2
  }
 
  func abs(x int) int {

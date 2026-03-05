@@ -23,6 +23,25 @@ func NewRegistry() *Registry {
 	}
 }
 
+func (r *Registry) FindNearby(center engine.Hex, radius int) []string {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	var found []string
+
+	searchArea := engine.GetRange(center, radius)
+
+	// get all hexes in range
+	for _, hex := range searchArea {
+		if driversInHex, ok := r.Cells[hex]; ok {
+			for id := range driversInHex {
+				found = append(found, id)
+			}
+		}
+	}
+	return found
+}
+
 // Moves a driver from their current hex to a nex hex
 func (r *Registry) updateLocation(driverId string, lat, lon float64, mask *engine.LandMask) bool {
 	newHex := engine.LatLngToHex(lat, lon, 1000.0)
@@ -58,23 +77,39 @@ func (r *Registry) updateLocation(driverId string, lat, lon float64, mask *engin
 	return true
 }
 
-func (r *Registry) FindNearby(center engine.Hex, radius int) []string {
+func (r *Registry) FindNearestNeighbours(center engine.Hex, radius int) (string, int) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
-	var found []string
+	candidates := make(map[string]int)
 
+	// Get all hexes in search radius
 	searchArea := engine.GetRange(center, radius)
 
-	// get all hexes in range
+	// Collect all drivers in those hexes
 	for _, hex := range searchArea {
 		if driversInHex, ok := r.Cells[hex]; ok {
+			dist := center.Distance(hex) // Calculate via hex-based distance
 			for id := range driversInHex {
-				found = append(found, id)
+				candidates[id] = dist
 			}
 		}
 	}
-	return found
+
+	type kv struct {
+		Key		string
+		Value	int
+	}
+
+	var smallestKV kv = kv{Key: "", Value: 10000000}
+
+	for k, v := range candidates {
+		if v <= smallestKV.Value {
+			smallestKV = kv{Key: k, Value: v}
+		}
+	}
+
+	return smallestKV.Key, smallestKV.Value
 }
 
 func (r *Registry) HandleDriverUpdate(driverId string, lat, lon float64, mask *engine.LandMask) bool {

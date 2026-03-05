@@ -32,13 +32,16 @@ func main() {
     }
 	fmt.Printf("Registry populated with %d drivers across active cells.\n", len(registry.Drivers))
 
-    customerPos := engine.LatLngToHex(35.877727, 14.560603, 1000.0)
+    customerPos := engine.LatLngToHex(35.895279, 14.352950, 1000.0)
 
     driversNearby := registry.FindNearby(customerPos, 1)
 
     if len(driversNearby) != 0 {
-        fmt.Printf("Found %d Drivers.)\n", len(driversNearby))
+        fmt.Printf("Found %d Drivers.\n", len(driversNearby))
     }
+
+	driverId, distance := registry.FindNearestNeighbours(customerPos, 1)
+	fmt.Printf("Driver %s is %d km near you, dispatching.\n", driverId, distance)
 }
 
 func generateData() {
