@@ -18,7 +18,7 @@ func main() {
 		fmt.Errorf("Error reading land mask due to %v", err)
 	}
 
-	drivers, err := geojsonParser.LoadPointsFromGeoJson("results/v2/less_drivers.geojson")
+	drivers, err := geojsonParser.LoadPointsFromGeoJson("results/v2/drivers_sim.geojson")
 
 	if err!=nil {
 		fmt.Errorf("Error reading driver points due to %v", err)
