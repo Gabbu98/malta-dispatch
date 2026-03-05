@@ -1,0 +1,398 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.3434441617977,
+          35.95323365627444
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.541192273571548,
+          35.85716647791035
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.227289334280085,
+          36.04233017604825
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.43438599820856,
+          35.93198058608705
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.422567453044003,
+          35.864442967289065
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.270827199688897,
+          36.05244423840511
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.51993120192149,
+          35.85480371033101
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.503028525887359,
+          35.81270399289727
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.463559958781087,
+          35.884241444909335
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.261221900163106,
+          36.028441119973685
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.30130023833837,
+          36.040320989329224
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.383535966495831,
+          35.96024349072414
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.52785981103786,
+          35.84630596613294
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.322574903580808,
+          35.97180557905928
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.298640252218892,
+          36.048855637550545
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.55370282828877,
+          35.88294947062816
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.552984633131334,
+          35.857523521975246
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.281331093521178,
+          36.051610704694006
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.48305764323325,
+          35.88564575093956
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.37310557212024,
+          35.87043767404135
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.337016371946646,
+          35.9063324291902
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.437550449431557,
+          35.93779370294927
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.407402565478124,
+          35.9002674155415
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      },
+      "id": 27
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.257033199167225,
+          36.045135362610175
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.36933249780827,
+          35.94464393490279
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.349152609351187,
+          35.88236316842737
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.47458267280527,
+          35.91328746808908
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          14.22142955817317,
+          36.05520559257999
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-symbol": "taxi"
+      }
+    }
+  ]
+}

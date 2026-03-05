@@ -18,7 +18,7 @@ func main() {
 		fmt.Errorf("Error reading land mask due to %v", err)
 	}
 
-	drivers, err := geojsonParser.LoadPointsFromGeoJson("results/v2/drivers_sim.geojson")
+	drivers, err := geojsonParser.LoadPointsFromGeoJson("results/v2/less_drivers.geojson")
 
 	if err!=nil {
 		fmt.Errorf("Error reading driver points due to %v", err)
@@ -32,15 +32,15 @@ func main() {
     }
 	fmt.Printf("Registry populated with %d drivers across active cells.\n", len(registry.Drivers))
 
-    customerPos := engine.LatLngToHex(35.895279, 14.352950, 1000.0)
+    customerPos := engine.LatLngToHex(35.891354, 14.440711, 1000.0)
 
-    driversNearby := registry.FindNearby(customerPos, 1)
+    driversNearby := registry.FindNearby(customerPos, 5)
 
     if len(driversNearby) != 0 {
         fmt.Printf("Found %d Drivers.\n", len(driversNearby))
     }
 
-	driverId, distance := registry.FindNearestNeighbours(customerPos, 1)
+	driverId, distance := registry.FindNearestNeighbours(customerPos, 5)
 	fmt.Printf("Driver %s is %d km near you, dispatching.\n", driverId, distance)
 }
 
