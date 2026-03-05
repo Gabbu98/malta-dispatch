@@ -24,12 +24,12 @@ func NewRegistry() *Registry {
 }
 
 // Moves a driver from their current hex to a nex hex
-func (r *Registry) updateLocation(driverId string, lat, lon float64, mask *engine.LandMask) {
-	newHex := engine.LatLngToHex(lat, lon, 300.0)
+func (r *Registry) updateLocation(driverId string, lat, lon float64, mask *engine.LandMask) bool {
+	newHex := engine.LatLngToHex(lat, lon, 1000.0)
 
 	if !mask.IsLand(newHex) {
-		fmt.Printf("Warning: Driver %s reported location at sea. Ignoring.\n")
-		return
+		fmt.Printf("Warning: Driver %s reported location at sea. Ignoring.\n", driverId)
+		return false
 	}
 
 	r.mu.Lock()
@@ -37,7 +37,7 @@ func (r *Registry) updateLocation(driverId string, lat, lon float64, mask *engin
 
 	if oldHex, ok := r.Drivers[driverId]; ok {
 		if oldHex == newHex {
-			return
+			return true
 		}
 
 		delete(r.Cells[oldHex], driverId)
@@ -55,6 +55,7 @@ func (r *Registry) updateLocation(driverId string, lat, lon float64, mask *engin
 	r.Cells[newHex][driverId] = struct{}{}
 
 	r.Drivers[driverId] = newHex
+	return true
 }
 
 func (r *Registry) FindNearby(center engine.Hex, radius int) []string {
@@ -76,10 +77,7 @@ func (r *Registry) FindNearby(center engine.Hex, radius int) []string {
 	return found
 }
 
-//func (r *Registry) HandleClientLocation(lat, lon float64) []string {}
-
-
-func (r *Registry) HandleDriverUpdate(driverId string, lat, lon float64, mask *engine.LandMask) {
-	r.updateLocation(driverId, lat, lon, mask)
+func (r *Registry) HandleDriverUpdate(driverId string, lat, lon float64, mask *engine.LandMask) bool {
+	return r.updateLocation(driverId, lat, lon, mask)
 }
 

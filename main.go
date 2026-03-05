@@ -3,113 +3,134 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	geojsonparsers "malta-dispatch/geojsonParsers"
 	"malta-dispatch/internal/engine"
+	"malta-dispatch/internal/store"
+	"math/rand"
 	"os"
-
-	"github.com/twpayne/go-geom"
-	"github.com/twpayne/go-geom/encoding/geojson"
+	"time"
 )
 
-func main2() {
-	mp, err := readGeoJson("results/v1/malta.geojson")
+func main() {
+	geojsonParser := geojsonparsers.NewGeoJsonParser2()
+	landMask, err := geojsonParser.LoadLandMaskFromGeoJSON("results/v2/visual_mask.geojson")
+	if err!=nil {
+		fmt.Errorf("Error reading land mask due to %v", err)
+	}
+
+	drivers, err := geojsonParser.LoadPointsFromGeoJson("results/v2/drivers_sim.geojson")
+
+	if err!=nil {
+		fmt.Errorf("Error reading driver points due to %v", err)
+	}
+
+	registry := store.NewRegistry()
+	for i, p := range drivers {
+        driverID := fmt.Sprintf("driver_%d", i)
+        // This will snap the raw Lat/Lon to your 300m Hex grid
+        registry.HandleDriverUpdate(driverID, p.Lat, p.Lon, landMask)
+    }
+	fmt.Printf("Registry populated with %d drivers across active cells.\n", len(registry.Drivers))
+
+    customerPos := engine.LatLngToHex(35.877727, 14.560603, 1000.0)
+
+    driversNearby := registry.FindNearby(customerPos, 1)
+
+    if len(driversNearby) != 0 {
+        fmt.Printf("Found %d Drivers.)\n", len(driversNearby))
+    }
+}
+
+func generateData() {
+	// Seed random for different results each run
+	rand.Seed(time.Now().UnixNano())
+
+	geoJsonParser := geojsonparsers.NewGeoJsonParser2()
+	mp, err := geoJsonParser.ReadGeoJson("results/v2/malta.geojson")
 	if err != nil {
 		fmt.Printf("Error whilst reading geojson: %v\n", err)
 		return
 	}
 
-	minLon, minLat, maxLon, maxLat := determineLimits(mp)
+	minLon, minLat, maxLon, maxLat := geoJsonParser.DetermineLimits(mp)
+	
+	registry := store.NewRegistry()
+	landMask := geoJsonParser.DetermineLandHexes(mp, minLon, minLat, maxLon, maxLat)
+	var driverCoordinates []engine.Point
 
-	determineLandHexes(mp, minLon, minLat, maxLon, maxLat)
-}
-
-func readGeoJson(filename string) (*geom.MultiPolygon, error) {
-	data, err := os.ReadFile(filename)
-	if err != nil {
-		return nil, err
-	}
-
-	var fc geojson.FeatureCollection
-	err = json.Unmarshal(data, &fc)
-	if err != nil {
-		return nil, err
-	}
-
-	if mp, ok := fc.Features[0].Geometry.(*geom.MultiPolygon); ok {
-		return mp, nil
-	}
-
-	if p, ok := fc.Features[0].Geometry.(*geom.Polygon); ok {
-		mp := geom.NewMultiPolygon(p.Layout())
-		err = mp.Push(p)
-		if err != nil {
-			return nil, err
-		}
-		return mp, nil
-	}
-
-	return nil, fmt.Errorf("unsupported geometry type")
-}
-
-func determineLimits(mp *geom.MultiPolygon) (float64, float64, float64, float64) {
-	b := mp.Bounds()
-	minLon, minLat, maxLon, maxLat := b.Min(0), b.Min(1), b.Max(0), b.Max(1)
-
-	padding := 0.001
-	return minLon - padding, minLat - padding, maxLon + padding, maxLat + padding
-}
-
-func determineLandHexes(mp *geom.MultiPolygon, minLon, minLat, maxLon, maxLat float64) {
-	landMask := make(map[engine.Hex]struct{})
-	size := 1000.0
-	step := 0.0005
-
-	coords := mp.Coords()
-
-	for lon := minLon; lon <= maxLon; lon += step {
-		for lat := minLat; lat <= maxLat; lat += step {
-			if isInside(coords, lon, lat) {
-				hex := engine.LatLngToHex(lat, lon, size)
-				// If we haven't processed this hex yet
-				if _, processed := landMask[hex]; !processed {
-				// Check if the CENTER of the hex is on land
-				// (This is usually enough for a clean look)
-					if isInside(coords, lon, lat) {
-						landMask[hex] = struct{}{}
-					}
-				}
-			}
+	// We only want to export drivers that actually landed on the LandMask
+	for i := 0; i < 1000; i++ {
+		driverId := fmt.Sprintf("Taxi-%03d", i)
+		lat, lon := generateRandomCoordinates(minLon, minLat, maxLon, maxLat)
+		
+		// The registry handles the land check internally
+		validHex := registry.HandleDriverUpdate(driverId, lat, lon, landMask)
+		if (validHex) {
+			driverCoordinates = append(driverCoordinates, engine.Point{
+                Lat: lat,
+                Lon: lon,
+            })
 		}
 	}
-	saveMask("results/v1/land_mask.json", landMask)
+
+	// Extract successful driver locations from registry for export
+	exportDriverCoordinatesToGeoJson(driverCoordinates, "results/v2/drivers_sim.geojson")
+
+	fmt.Println("Simulation complete. Check drivers_sim.geojson")
+
 }
 
-func isInside(polygons [][][]geom.Coord, lon, lat float64) bool {
-	inside := false
-	for _, rings := range polygons {
-		for _, ring := range rings {
-			j := len(ring) - 1
-			for i := 0; i < len(ring); i++ {
-				if (ring[i][1] > lat) != (ring[j][1] > lat) {
-					intersectX := (ring[j][0]-ring[i][0])*(lat-ring[i][1])/
-						(ring[j][1]-ring[i][1]) + ring[i][0]
-					if lon < intersectX {
-						inside = !inside
-					}
-				}
-				j = i
-			}
-		}
-	}
-	return inside
+func generateRandomCoordinates(minLon, minLat, maxLon, maxLat float64) (float64, float64) {
+	// rand.Float64() returns 0.0 to 1.0
+	lon := minLon + rand.Float64()*(maxLon-minLon)
+	lat := minLat + rand.Float64()*(maxLat-minLat)
+	return lat, lon // Return Lat, Lon to match your registry's expected input
 }
 
-func saveMask(filename string, mask map[engine.Hex]struct{}) {
-	var list []engine.Hex
-	for hex := range mask {
-		list = append(list, hex)
-	}
+func exportDriverCoordinatesToGeoJson(coordinates []engine.Point, filename string) {
+    type Feature struct {
+        Type       string                 `json:"type"`
+        Geometry   map[string]interface{} `json:"geometry"`
+        Properties map[string]interface{} `json:"properties"`
+    }
 
-	data, _ := json.Marshal(list)
-	os.WriteFile(filename, data, 0644)
-	fmt.Printf("Saved %d hexes to %s\n", len(list), filename)
+    type FeatureCollection struct {
+        Type     string    `json:"type"`
+        Features []Feature `json:"features"`
+    }
+
+    featureCollection := FeatureCollection{
+        Type: "FeatureCollection",
+    }
+
+    // Use 'index, value' in range
+    for _, pt := range coordinates {
+        feature := Feature{
+            Type: "Feature",
+            Geometry: map[string]interface{}{
+                "type": "Point",
+                // IMPORTANT: geojson.io expects [Longitude, Latitude]
+                "coordinates": []float64{pt.Lon, pt.Lat},
+            },
+            Properties: map[string]interface{}{
+                "marker-color":  "#ff0000",
+                "marker-symbol": "taxi",
+            },
+        }
+        featureCollection.Features = append(featureCollection.Features, feature)
+    }
+
+    data, err := json.MarshalIndent(featureCollection, "", "  ")
+    if err != nil {
+        fmt.Printf("Error marshaling JSON: %v\n", err)
+        return
+    }
+
+    // Save to file
+    err = os.WriteFile(filename, data, 0644)
+    if err != nil {
+        fmt.Printf("Error writing file: %v\n", err)
+    } else {
+        fmt.Printf("Successfully exported %d points to %s\n", len(coordinates), filename)
+    }
 }

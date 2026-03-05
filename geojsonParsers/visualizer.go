@@ -1,4 +1,4 @@
-package main
+package geojsonparsers
 
 import (
 	"encoding/json"
@@ -19,9 +19,13 @@ const (
 	OriginLon = 14.4031
 )
 
-func main() {
+type Visualizer struct {
+
+}
+
+func (v *Visualizer) Visualize() {
 	// 1. Load baked hexes
-	data, err := os.ReadFile("results/v1/land_mask.json")
+	data, err := os.ReadFile("results/v2/land_mask.json")
 	if err != nil {
 		fmt.Println("Could not read land_mask.json:", err)
 		return
@@ -93,6 +97,6 @@ func main() {
 
 	// 3. Save file
 	result, _ := json.MarshalIndent(fc, "", "  ")
-	os.WriteFile("results/v1/visual_mask.geojson", result, 0644)
+	os.WriteFile("results/v2/visual_germany_mask.geojson", result, 0644)
 	fmt.Printf("Successfully generated visual_mask.geojson with %d hexes\n", len(hexes))
 }

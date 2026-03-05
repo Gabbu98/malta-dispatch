@@ -4,7 +4,11 @@ type LandMask struct {
 	ValidHexes map[Hex]struct{} // land specific hexes
 }
 
-func NewLandMask() *LandMask {
+func NewLandMask(mask map[Hex]struct{}) *LandMask {
+	if mask!=nil{
+		return &LandMask{ValidHexes: mask}
+	}
+
 	return &LandMask{
 		ValidHexes: make(map[Hex]struct{}),
 	}
